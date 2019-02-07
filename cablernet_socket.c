@@ -1,4 +1,4 @@
-// Copyright (C) 2018 ZCaliptium.
+// Copyright (C) 2018-2019 ZCaliptium.
 
 #include "cablernet.h"
 
@@ -24,7 +24,7 @@
 #include <string.h> // mem...
 #endif
 
-int SOCXXNET_Startup()
+int CBLRNET_Startup()
 {
     // Windows needs sockets to be initialized before any calls.
 #ifdef _WIN32
@@ -39,22 +39,22 @@ int SOCXXNET_Startup()
     return 0; // Say no errors.
 }
 
-void SOCXXNET_Shutdown()
+void CBLRNET_Shutdown()
 {
 #ifdef _WIN32
     WSACleanup();
 #endif
 }
 
-int SOCXXNET_Socket_Open(socxxetsocket_t *pSocket, socxxnetlayerprotocol_t protocol, socxxnetsockettype_t type)
+int CBLRNET_Socket_Open(cblrnetsocket_t *pSocket, cblrnetlayerprotocol_t protocol, cblrnetsockettype_t type)
 {
     // If socket is invalid...
     if (!pSocket) {
         return 1;
     }
 
-    int address_family = (protocol == SOCXXNET_LAYER_IPv4) ? AF_INET : AF_INET6;
-    int socket_Type = (type == SOCXXNET_SOCKET_TYPE_DGRAM) ? SOCK_DGRAM : SOCK_STREAM;
+    int address_family = (protocol == CBLRNET_LAYER_IPv4) ? AF_INET : AF_INET6;
+    int socket_Type = (type == CBLRNET_SOCKET_TYPE_DGRAM) ? SOCK_DGRAM : SOCK_STREAM;
 
     pSocket->handle = socket(address_family, socket_Type, 0);
 
@@ -66,17 +66,17 @@ int SOCXXNET_Socket_Open(socxxetsocket_t *pSocket, socxxnetlayerprotocol_t proto
     pSocket->protocol = protocol;
 
     // If dual-stack socket.
-    int ipv6_only = (type == SOCXXNET_LAYER_ANYIP) ? 0 : 1;
+    int ipv6_only = (type == CBLRNET_LAYER_ANYIP) ? 0 : 1;
 
     // If IPv6 connection. Report error if IPV6_V6ONLY can't be set.
-    if (type != SOCXXNET_LAYER_IPv4 && setsockopt(pSocket->handle, IPPROTO_IPV6, IPV6_V6ONLY, (const char *)&ipv6_only, sizeof(ipv6_only)) != 0) {
+    if (type != CBLRNET_LAYER_IPv4 && setsockopt(pSocket->handle, IPPROTO_IPV6, IPV6_V6ONLY, (const char *)&ipv6_only, sizeof(ipv6_only)) != 0) {
         return 1;
     }
 
     return 0;
 }
 
-int SOCXXNET_Socket_Bind(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress)
+int CBLRNET_Socket_Bind(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
 {
     // If socket or address is invalid...
     if (!pSocket || !pAddress) {
@@ -84,17 +84,17 @@ int SOCXXNET_Socket_Bind(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress)
     }
 
     // If address protocol is invalid...
-    if (pAddress->protocol == SOCXXNET_LAYER_UNKNOWN) {
+    if (pAddress->protocol == CBLRNET_LAYER_UNKNOWN) {
         return 1;
     }
 
     // If IPv4 socket and non-IPv4 address.
-    if (pSocket->protocol == SOCXXNET_LAYER_IPv4 && pAddress->protocol != pSocket->protocol) {
+    if (pSocket->protocol == CBLRNET_LAYER_IPv4 && pAddress->protocol != pSocket->protocol) {
         return 1;
     }
 
     // IPv4
-    if (pSocket->protocol == SOCXXNET_LAYER_IPv4) {
+    if (pSocket->protocol == CBLRNET_LAYER_IPv4) {
         struct sockaddr_in addr;
 
         memset(&addr, 0, sizeof(addr));
@@ -126,7 +126,7 @@ int SOCXXNET_Socket_Bind(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress)
     return 0;
 }
 
-void SOCXXNET_Socket_Close(socxxetsocket_t *pSocket)
+void CBLRNET_Socket_Close(cblrnetsocket_t *pSocket)
 {
     // If socket is invalid then there is no need to close it.
     if (!pSocket) {
@@ -136,7 +136,7 @@ void SOCXXNET_Socket_Close(socxxetsocket_t *pSocket)
     close(pSocket->handle);
 }
 
-int SOCXXNET_Socket_Read(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress, void *pData, int maxLength)
+int CBLRNET_Socket_Read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength)
 {
     s32 slReceived = 0;
     socklen_t address_len = 0;
@@ -146,7 +146,7 @@ int SOCXXNET_Socket_Read(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress, 
     }
 
     // IPv4
-    if (pSocket->protocol == SOCXXNET_LAYER_IPv4)
+    if (pSocket->protocol == CBLRNET_LAYER_IPv4)
     {
         struct sockaddr_in address;
         memset(&address, 0, sizeof(address));
@@ -162,7 +162,7 @@ int SOCXXNET_Socket_Read(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress, 
         pAddress->port = ntohs(address.sin_port);
 
     // IPv6
-    } else if (pSocket->protocol == SOCXXNET_LAYER_IPv6) {
+    } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
         struct sockaddr_in6 address;
         memset(&address, 0, sizeof(address));
         address_len = sizeof(address);
@@ -182,7 +182,7 @@ int SOCXXNET_Socket_Read(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress, 
     return slReceived;
 }
 
-int SOCXXNET_Socket_SetOption(socxxetsocket_t *pSocket, socxxnetsocketoption_t option, int value)
+int CBLRNET_Socket_SetOption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t option, int value)
 {
     if (!pSocket) {
         return -1;
@@ -192,7 +192,7 @@ int SOCXXNET_Socket_SetOption(socxxetsocket_t *pSocket, socxxnetsocketoption_t o
 
     switch (option)
     {
-        case SOCXXNET_SOCKOPT_NONBLOCKING: {
+        case CBLRNET_SOCKOPT_NONBLOCKING: {
 #ifdef _WIN32
             u32 mode = (u32) value;
             result = ioctlsocket (pSocket->handle, FIONBIO, &mode);
@@ -208,19 +208,19 @@ int SOCXXNET_Socket_SetOption(socxxetsocket_t *pSocket, socxxnetsocketoption_t o
 #endif
         } break;
 
-        case SOCXXNET_SOCKOPT_BROADCAST: {
+        case CBLRNET_SOCKOPT_BROADCAST: {
             result = setsockopt(pSocket->handle, SOL_SOCKET, SO_BROADCAST, (char *)&value, sizeof(int));
         } break;
 
-        case SOCXXNET_SOCKOPT_RXBUF: {
+        case CBLRNET_SOCKOPT_RXBUF: {
             result = setsockopt(pSocket->handle, SOL_SOCKET, SO_RCVBUF, (char *)&value, sizeof (int));
         } break;
 
-        case SOCXXNET_SOCKOPT_TXBUF: {
+        case CBLRNET_SOCKOPT_TXBUF: {
             result = setsockopt(pSocket->handle, SOL_SOCKET, SO_SNDBUF, (char *)&value, sizeof (int));
         } break;
 
-        case SOCXXNET_SOCKOPT_REUSEADDR: {
+        case CBLRNET_SOCKOPT_REUSEADDR: {
             result = setsockopt(pSocket->handle, SOL_SOCKET, SO_REUSEADDR, (char *)&value, sizeof (int));
         } break;
 
@@ -232,7 +232,7 @@ int SOCXXNET_Socket_SetOption(socxxetsocket_t *pSocket, socxxnetsocketoption_t o
     return result;
 }
 
-int SOCXXNET_Socket_WaitData(socxxetsocket_t *pSocket, s32 timeout_ms)
+int CBLRNET_Socket_WaitData(cblrnetsocket_t *pSocket, s32 timeout_ms)
 {
     fd_set readset;
     int result;
@@ -271,12 +271,12 @@ int SOCXXNET_Socket_WaitData(socxxetsocket_t *pSocket, s32 timeout_ms)
     return 1;
 }
 
-int SOCXXNET_Socket_Send(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress, const void *data, u32 size)
+int CBLRNET_Socket_Send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size)
 {
     s32 sent;
 
     // IPv4
-    if (pSocket->protocol == SOCXXNET_LAYER_IPv4)
+    if (pSocket->protocol == CBLRNET_LAYER_IPv4)
     {
         struct sockaddr_in address;
 
@@ -290,7 +290,7 @@ int SOCXXNET_Socket_Send(socxxetsocket_t *pSocket, socxxnetaddress_t *pAddress, 
                       sizeof(struct sockaddr_in));
 
     // IPv6
-    } else if (pSocket->protocol == SOCXXNET_LAYER_IPv6) {
+    } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
         struct sockaddr_in6 address;
 
         // Setup the destination point.

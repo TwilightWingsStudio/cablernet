@@ -1,4 +1,4 @@
-// Copyright (C) 2018 ZCaliptium.
+// Copyright (C) 2018-2019 ZCaliptium.
 
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +10,7 @@
 #include <WS2tcpip.h>
 #endif
 
-int SOCXXNET_Address_FromString(socxxnetaddress_t *pAddress, const char *pString)
+int CBLRNET_Address_FromString(cblrnetaddress_t *pAddress, const char *pString)
 {
     if (!pAddress) {
         return 1;
@@ -31,7 +31,7 @@ int SOCXXNET_Address_FromString(socxxnetaddress_t *pAddress, const char *pString
 
     // IPv4 address with port.
     if (sscanf(pString, "%3hd.%3hd.%3hd.%3hd:%hd", &a, &b, &c, &d, &port) == 5) {
-        pAddress->protocol = SOCXXNET_LAYER_IPv4;
+        pAddress->protocol = CBLRNET_LAYER_IPv4;
         pAddress->data.v4 = (u32)((a << 24) | (b << 16) | (c << 8) | d);
         pAddress->port = port;
 
@@ -40,7 +40,7 @@ int SOCXXNET_Address_FromString(socxxnetaddress_t *pAddress, const char *pString
 
     // IPv4 address without port.
     if (sscanf(pString, "%3hd.%3hd.%3hd.%3hd", &a, &b, &c, &d) == 4) {
-        pAddress->protocol = SOCXXNET_LAYER_IPv4;
+        pAddress->protocol = CBLRNET_LAYER_IPv4;
         pAddress->data.v4 = (u32)((a << 24) | (b << 16) | (c << 8) | d);
 
         return 0; // Report success.
@@ -151,7 +151,7 @@ int SOCXXNET_Address_FromString(socxxnetaddress_t *pAddress, const char *pString
     return 0;
 }
 
-int SOCXXNET_Address_ToString(socxxnetaddress_t *pAddress, c8 *pBuffer, u8 bufferLength)
+int CBLRNET_Address_ToString(cblrnetaddress_t *pAddress, c8 *pBuffer, u8 bufferLength)
 {
     if (!pAddress) {
         return 1;
@@ -160,7 +160,7 @@ int SOCXXNET_Address_ToString(socxxnetaddress_t *pAddress, c8 *pBuffer, u8 buffe
     memset(pBuffer, 0, bufferLength);
 
     // IPv6
-    if (pAddress->protocol == SOCXXNET_LAYER_IPv6) {
+    if (pAddress->protocol == CBLRNET_LAYER_IPv6) {
 
         pBuffer[0] = '[';
 
@@ -200,7 +200,7 @@ int SOCXXNET_Address_ToString(socxxnetaddress_t *pAddress, c8 *pBuffer, u8 buffe
     return 1;
 }
 
-int SOCXXNET_Address_Resolve(socxxnetaddress_t *pAddress, const c8 *pName)
+int CBLRNET_Address_Resolve(cblrnetaddress_t *pAddress, const c8 *pName)
 {
     if (!pAddress) {
         return 1;
@@ -231,7 +231,7 @@ int SOCXXNET_Address_Resolve(socxxnetaddress_t *pAddress, const c8 *pName)
     if (resolved->ai_addr->sa_family == AF_INET6) {
         struct sockaddr_in6 *pIn = (struct sockaddr_in6 *)resolved->ai_addr;
 
-        pAddress->protocol = SOCXXNET_LAYER_IPv6;
+        pAddress->protocol = CBLRNET_LAYER_IPv6;
         pAddress->port = pIn->sin6_port;
         pAddress->scopeId = pIn->sin6_scope_id;
         memcpy(&pAddress->data.v6[0], pIn->sin6_addr.s6_addr, 16);
@@ -240,7 +240,7 @@ int SOCXXNET_Address_Resolve(socxxnetaddress_t *pAddress, const c8 *pName)
     } else {
         struct sockaddr_in *pAddrIn = (struct sockaddr_in *)resolved->ai_addr;
 
-        pAddress->protocol = SOCXXNET_LAYER_IPv4;
+        pAddress->protocol = CBLRNET_LAYER_IPv4;
         pAddress->port = pAddrIn->sin_port;
         pAddress->scopeId = 0;
         pAddress->data.v4 = ntohl(pAddrIn->sin_addr.s_addr);
