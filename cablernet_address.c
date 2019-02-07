@@ -10,7 +10,7 @@
 #include <WS2tcpip.h>
 #endif
 
-int CBLRNET_Address_FromString(cblrnetaddress_t *pAddress, const char *pString)
+int cblrnet_address_fromstring(cblrnetaddress_t *pAddress, const char *pString)
 {
     if (!pAddress) {
         return 1;
@@ -151,7 +151,7 @@ int CBLRNET_Address_FromString(cblrnetaddress_t *pAddress, const char *pString)
     return 0;
 }
 
-int CBLRNET_Address_ToString(cblrnetaddress_t *pAddress, c8 *pBuffer, u8 bufferLength)
+int cblrnet_address_tostring(cblrnetaddress_t *pAddress, c8 *pBuffer, u8 bufferLength)
 {
     if (!pAddress) {
         return 1;
@@ -200,7 +200,7 @@ int CBLRNET_Address_ToString(cblrnetaddress_t *pAddress, c8 *pBuffer, u8 bufferL
     return 1;
 }
 
-int CBLRNET_Address_Resolve(cblrnetaddress_t *pAddress, const c8 *pName)
+int cblrnet_address_resolve(cblrnetaddress_t *pAddress, const c8 *pName)
 {
     if (!pAddress) {
         return 1;

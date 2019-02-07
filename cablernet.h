@@ -90,44 +90,44 @@ cblrnetsocket_t;
 
 
 //! Convert zero-terminated string to address.
-CBLRNET_API int CBLRNET_Address_FromString(cblrnetaddress_t *pAddress, const char *pString);
+CBLRNET_API int cblrnet_address_fromstring(cblrnetaddress_t *pAddress, const char *pString);
 
 //! Convert address to string.
-CBLRNET_API int CBLRNET_Address_ToString(cblrnetaddress_t *pAddress, c8 *pBuffer, u8 bufferLength);
+CBLRNET_API int cblrnet_address_tostring(cblrnetaddress_t *pAddress, c8 *pBuffer, u8 bufferLength);
 
 //!
-CBLRNET_API int CBLRNET_Address_Resolve(cblrnetaddress_t *pAddress, const c8 *pName);
+CBLRNET_API int cblrnet_address_resolve(cblrnetaddress_t *pAddress, const c8 *pName);
 
 
 //! Prepare sockets for usage. Call it once per your program.
 //! Returns 0 if everything fine. Error index othervise.
-CBLRNET_API int CBLRNET_Startup(void);
+CBLRNET_API int cblrnet_startup(void);
 
 //! Shutdown sockets when you finished usage. Call it once per your program.
-CBLRNET_API void CBLRNET_Shutdown(void);
+CBLRNET_API void cblrnet_shutdown(void);
 
 
 //! Initialize new socket.
 //! Returns 0 if everything fine. 1 othervise.
-CBLRNET_API int CBLRNET_Socket_Open(cblrnetsocket_t *pSocket, cblrnetlayerprotocol_t protocol, cblrnetsockettype_t type);
+CBLRNET_API int cblrnet_socket_open(cblrnetsocket_t *pSocket, cblrnetlayerprotocol_t protocol, cblrnetsockettype_t type);
 
 //! Bind socket to given address.
-CBLRNET_API int CBLRNET_Socket_Bind(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress);
+CBLRNET_API int cblrnet_socket_bind(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress);
 
 //! Close the socket.
-CBLRNET_API void CBLRNET_Socket_Close(cblrnetsocket_t *pSocket);
+CBLRNET_API void cblrnet_socket_close(cblrnetsocket_t *pSocket);
 
 //! Receive the data.
-CBLRNET_API int CBLRNET_Socket_Read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength);
+CBLRNET_API int cblrnet_socket_read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength);
 
 //! Set specific option for the socket.
-CBLRNET_API int CBLRNET_Socket_SetOption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t option, int value);
+CBLRNET_API int cblrnet_socket_setoption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t option, int value);
 
 //! Put current thread into sleep on given timeot.
-CBLRNET_API int CBLRNET_Socket_WaitData(cblrnetsocket_t *pSocket, s32 timeout_ms);
+CBLRNET_API int cblrnet_socket_waitdata(cblrnetsocket_t *pSocket, s32 timeout_ms);
 
 //! Send the data.
-CBLRNET_API int CBLRNET_Socket_Send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size);
+CBLRNET_API int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size);
 
 
 // Listen
@@ -135,7 +135,6 @@ CBLRNET_API int CBLRNET_Socket_Send(cblrnetsocket_t *pSocket, cblrnetaddress_t *
 // Connect
 
 // Poll
-
 
 
 #ifdef __cplusplus

@@ -24,7 +24,7 @@
 #include <string.h> // mem...
 #endif
 
-int CBLRNET_Startup()
+int cblrnet_startup()
 {
     // Windows needs sockets to be initialized before any calls.
 #ifdef _WIN32
@@ -39,14 +39,14 @@ int CBLRNET_Startup()
     return 0; // Say no errors.
 }
 
-void CBLRNET_Shutdown()
+void cblrnet_shutdown()
 {
 #ifdef _WIN32
     WSACleanup();
 #endif
 }
 
-int CBLRNET_Socket_Open(cblrnetsocket_t *pSocket, cblrnetlayerprotocol_t protocol, cblrnetsockettype_t type)
+int cblrnet_socket_open(cblrnetsocket_t *pSocket, cblrnetlayerprotocol_t protocol, cblrnetsockettype_t type)
 {
     // If socket is invalid...
     if (!pSocket) {
@@ -76,7 +76,7 @@ int CBLRNET_Socket_Open(cblrnetsocket_t *pSocket, cblrnetlayerprotocol_t protoco
     return 0;
 }
 
-int CBLRNET_Socket_Bind(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
+int cblrnet_socket_bind(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
 {
     // If socket or address is invalid...
     if (!pSocket || !pAddress) {
@@ -126,7 +126,7 @@ int CBLRNET_Socket_Bind(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
     return 0;
 }
 
-void CBLRNET_Socket_Close(cblrnetsocket_t *pSocket)
+void cblrnet_socket_close(cblrnetsocket_t *pSocket)
 {
     // If socket is invalid then there is no need to close it.
     if (!pSocket) {
@@ -136,7 +136,7 @@ void CBLRNET_Socket_Close(cblrnetsocket_t *pSocket)
     close(pSocket->handle);
 }
 
-int CBLRNET_Socket_Read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength)
+int cblrnet_socket_read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength)
 {
     s32 slReceived = 0;
     socklen_t address_len = 0;
@@ -182,7 +182,7 @@ int CBLRNET_Socket_Read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, vo
     return slReceived;
 }
 
-int CBLRNET_Socket_SetOption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t option, int value)
+int cblrnet_socket_setoption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t option, int value)
 {
     if (!pSocket) {
         return -1;
@@ -232,7 +232,7 @@ int CBLRNET_Socket_SetOption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t opt
     return result;
 }
 
-int CBLRNET_Socket_WaitData(cblrnetsocket_t *pSocket, s32 timeout_ms)
+int cblrnet_socket_waitdata(cblrnetsocket_t *pSocket, s32 timeout_ms)
 {
     fd_set readset;
     int result;
@@ -271,7 +271,7 @@ int CBLRNET_Socket_WaitData(cblrnetsocket_t *pSocket, s32 timeout_ms)
     return 1;
 }
 
-int CBLRNET_Socket_Send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size)
+int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size)
 {
     s32 sent;
 
