@@ -1,7 +1,7 @@
 SOURCES += \
-    $$PWD/socxxnet_address.c \
-    $$PWD/socxxnet_socket.c \
+    $$PWD/cablernet_address.c \
+    $$PWD/cablernet_socket.c \
 
 HEADERS += \
-    $$PWD/socxxnet.h \
+    $$PWD/cablernet.h \
     $$PWD/zkttypes.h
