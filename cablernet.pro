@@ -2,6 +2,7 @@
 
   SUBDIRS = \
             cablernet_dynamic \
-            cablernet_static
+            cablernet_static \
+            examples
 
   CONFIG += ordered
