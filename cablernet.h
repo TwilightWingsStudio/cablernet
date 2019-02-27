@@ -131,10 +131,13 @@ CBLRNET_API int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *
 
 
 // Listen
+CBLRNET_API int cblrnet_socket_listen(cblrnetsocket_t *pSocket);
 
-// Connect
+//! Connect to address. Used by stream sockets.
+CBLRNET_API int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress);
 
 // Poll
+CBLRNET_API int cblrnet_socket_poll(cblrnetsocket_t *pSocket);
 
 
 #ifdef __cplusplus

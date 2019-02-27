@@ -306,3 +306,9 @@ int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, co
 
     return sent > 0; // TODO: Maybe add more extensive check.
 }
+
+int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
+{
+
+    return 0;
+}
