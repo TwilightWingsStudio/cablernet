@@ -1,0 +1,9 @@
+*.obj
+*.so
+*.dll
+*.lib
+*.a
+
+# QtCreator
+*.pro.user
+*.pro.user.*
