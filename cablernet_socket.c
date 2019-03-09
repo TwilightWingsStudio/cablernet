@@ -309,6 +309,34 @@ int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, co
 
 int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
 {
+    s32 result;
 
-    return 0;
+    // IPv4
+    if (pSocket->protocol == CBLRNET_LAYER_IPv4)
+    {
+        struct sockaddr_in address;
+
+        // Setup the destination point.
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = htonl(pAddress->data.v4);
+        address.sin_port = htons(pAddress->port);
+
+        // Try to connect
+        result = connect(pSocket->handle, (struct sockaddr *)&address, sizeof(struct sockaddr_in));
+
+    // IPv6
+    } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
+        struct sockaddr_in6 address;
+
+        // Setup the destination point.
+        address.sin6_family = AF_INET6;
+        memcpy(&address.sin6_addr, pAddress->data.v6, 16);
+        address.sin6_port = htons(pAddress->port);
+        address.sin6_scope_id = pAddress->scopeId;
+
+        // Send the data.
+        result = connect(pSocket->handle, (struct sockaddr *)&address, sizeof(struct sockaddr_in6));
+    }
+
+    return result == 0; // TODO: You may check errno
 }

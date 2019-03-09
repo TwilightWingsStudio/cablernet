@@ -3,6 +3,7 @@
   SUBDIRS = \
             broadcastsender \
             echoserver \
-            chatclient
+            chatclient \
+            tcpclient
 
   CONFIG += ordered
