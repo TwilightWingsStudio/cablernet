@@ -4,6 +4,7 @@
             broadcastsender \
             echoserver \
             chatclient \
-            tcpclient
+            tcpclient \
+    tcpechoserver
 
   CONFIG += ordered

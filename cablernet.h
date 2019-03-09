@@ -117,21 +117,27 @@ CBLRNET_API int cblrnet_socket_bind(cblrnetsocket_t *pSocket, cblrnetaddress_t *
 //! Close the socket.
 CBLRNET_API void cblrnet_socket_close(cblrnetsocket_t *pSocket);
 
-//! Receive the data.
-CBLRNET_API int cblrnet_socket_read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength);
-
 //! Set specific option for the socket.
 CBLRNET_API int cblrnet_socket_setoption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t option, int value);
 
 //! Put current thread into sleep on given timeot.
 CBLRNET_API int cblrnet_socket_waitdata(cblrnetsocket_t *pSocket, s32 timeout_ms);
 
+//! Receive the data.
+CBLRNET_API int cblrnet_socket_recvfrom(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength);
+
 //! Send the data.
-CBLRNET_API int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size);
+CBLRNET_API int cblrnet_socket_sendto(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size);
 
 
-// Listen
-CBLRNET_API int cblrnet_socket_listen(cblrnetsocket_t *pSocket);
+//! Listen for connections on a socket. Used by stream sockets.
+CBLRNET_API int cblrnet_socket_listen(cblrnetsocket_t *pSocket, s32 connection_count);
+
+//! Accept a connection on a socket. Used by stream sockets.
+//! @param[in]  pSocket
+//! @param[out] pClientAddress
+//! @param[out] pAcceptSocket
+CBLRNET_API int cblrnet_socket_accept(cblrnetsocket_t *pSocket, cblrnetaddress_t *pClientAddress, cblrnetsocket_t *pAcceptSocket);
 
 //! Connect to address. Used by stream sockets.
 CBLRNET_API int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress);
