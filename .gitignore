@@ -3,7 +3,11 @@
 *.dll
 *.lib
 *.a
+*.exp
 
 # QtCreator
 *.pro.user
 *.pro.user.*
+
+# SCons
+*.dblite
