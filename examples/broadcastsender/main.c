@@ -43,7 +43,7 @@ int main()
             break;
         }
 
-        cblrnet_socket_send(&sock, &destAddr, &inputBuffer[0], strlen(&inputBuffer[0]));
+        cblrnet_socket_sendto(&sock, &destAddr, &inputBuffer[0], strlen(&inputBuffer[0]));
 
         // Await data for 1 second.
         if (!cblrnet_socket_waitdata(&sock, 1000)) {
@@ -51,7 +51,7 @@ int main()
             continue;
         }
 
-        int receivedBytes = cblrnet_socket_read(&sock, &senderAddr, &recvBuffer[0], RECV_BUFFER_SIZE);
+        int receivedBytes = cblrnet_socket_recvfrom(&sock, &senderAddr, &recvBuffer[0], RECV_BUFFER_SIZE);
 
         recvBuffer[receivedBytes] = 0x0;
 

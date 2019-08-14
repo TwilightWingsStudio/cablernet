@@ -137,52 +137,6 @@ void cblrnet_socket_close(cblrnetsocket_t *pSocket)
     close(pSocket->handle);
 }
 
-int cblrnet_socket_read(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength)
-{
-    s32 slReceived = 0;
-    socklen_t address_len = 0;
-
-    if (!pSocket || !pAddress || !pData) {
-        return -1;
-    }
-
-    // IPv4
-    if (pSocket->protocol == CBLRNET_LAYER_IPv4)
-    {
-        struct sockaddr_in address;
-        memset(&address, 0, sizeof(address));
-        address_len = sizeof(address);
-
-        slReceived = recvfrom(pSocket->handle, (char *)pData, maxLength, 0, (struct sockaddr *)&address, &address_len);
-
-        if (slReceived < 0) {
-            return -1;
-        }
-
-        pAddress->data.v4 = ntohl(address.sin_addr.s_addr);
-        pAddress->port = ntohs(address.sin_port);
-
-    // IPv6
-    } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
-        struct sockaddr_in6 address;
-        memset(&address, 0, sizeof(address));
-        address_len = sizeof(address);
-
-        slReceived = recvfrom(pSocket->handle, (char *)pData, maxLength, 0, (struct sockaddr *)&address, &address_len);
-
-        if (slReceived < 0) {
-            return -1;
-        }
-
-        // Return sender IP & port as argument.
-        memcpy(pAddress->data.v6, address.sin6_addr.s6_addr, 16);
-        pAddress->scopeId = address.sin6_scope_id;
-        pAddress->port = ntohs(address.sin6_port);
-    }
-
-    return slReceived;
-}
-
 int cblrnet_socket_setoption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t option, int value)
 {
     if (!pSocket) {
@@ -272,9 +226,160 @@ int cblrnet_socket_waitdata(cblrnetsocket_t *pSocket, s32 timeout_ms)
     return 1;
 }
 
-int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size)
+int cblrnet_socket_recvfrom(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, void *pData, int maxLength)
+{
+    s32 slReceived = 0;
+    socklen_t address_len = 0;
+
+    if (!pSocket || !pData) {
+        return -1;
+    }
+
+    if(!pAddress){
+        // SOCK_STREAM
+        slReceived = recvfrom(pSocket->handle, (char *)pData, maxLength, 0, NULL, NULL);
+
+        if (slReceived < 0) {
+            return -1;
+        }
+
+    } else {
+        // IPv4
+        if (pSocket->protocol == CBLRNET_LAYER_IPv4)
+        {
+            struct sockaddr_in address;
+            memset(&address, 0, sizeof(address));
+            address_len = sizeof(address);
+
+            slReceived = recvfrom(pSocket->handle, (char *)pData, maxLength, 0, (struct sockaddr *)&address, &address_len);
+
+            if (slReceived < 0) {
+                return -1;
+            }
+
+            pAddress->data.v4 = ntohl(address.sin_addr.s_addr);
+            pAddress->port = ntohs(address.sin_port);
+
+        // IPv6
+        } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
+            struct sockaddr_in6 address;
+            memset(&address, 0, sizeof(address));
+            address_len = sizeof(address);
+
+            slReceived = recvfrom(pSocket->handle, (char *)pData, maxLength, 0, (struct sockaddr *)&address, &address_len);
+
+            if (slReceived < 0) {
+                return -1;
+            }
+
+            // Return sender IP & port as argument.
+            memcpy(pAddress->data.v6, address.sin6_addr.s6_addr, 16);
+            pAddress->scopeId = address.sin6_scope_id;
+            pAddress->port = ntohs(address.sin6_port);
+        }
+    }
+
+    return slReceived;
+}
+
+int cblrnet_socket_sendto(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, const void *data, u32 size)
 {
     s32 sent;
+
+    if(pAddress == NULL) {
+        // SOCK_STREAM
+        sent = sendto(pSocket->handle, (const char *)data, size, 0, NULL, NULL);
+
+    } else {
+        // IPv4
+        if (pSocket->protocol == CBLRNET_LAYER_IPv4)
+        {
+            struct sockaddr_in address;
+
+            // Setup the destination point.
+            address.sin_family = AF_INET;
+            address.sin_addr.s_addr = htonl(pAddress->data.v4);
+            address.sin_port = htons(pAddress->port);
+
+            // Send the data.
+            sent = sendto(pSocket->handle, (const char *)data, size, 0, (struct sockaddr *)&address,
+                          sizeof(struct sockaddr_in));
+
+        // IPv6
+        } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
+            struct sockaddr_in6 address;
+
+            // Setup the destination point.
+            address.sin6_family = AF_INET6;
+            memcpy(&address.sin6_addr, pAddress->data.v6, 16);
+            address.sin6_port = htons(pAddress->port);
+            address.sin6_scope_id = pAddress->scopeId;
+
+            // Send the data.
+            sent = sendto(pSocket->handle, (const char *)data, size, 0, (struct sockaddr *)&address,
+                          sizeof(struct sockaddr_in6));
+        }
+    }
+
+    return sent > 0; // TODO: Maybe add more extensive check.
+}
+
+int cblrnet_socket_listen(cblrnetsocket_t *pSocket, s32 connection_count)
+{
+    s32 result;
+    result = listen(pSocket->handle, connection_count);
+    return result; // TODO: You may check errno
+}
+
+int cblrnet_socket_accept(cblrnetsocket_t *pSocket, cblrnetaddress_t *pClientAddress, cblrnetsocket_t *pAcceptSocket)
+{
+    s32 handle = -1;
+    socklen_t address_len = 0;
+
+    if (pSocket->protocol == CBLRNET_LAYER_IPv4)
+    {
+        struct sockaddr_in address;
+        memset(&address, 0, sizeof(address));
+        address_len = sizeof(address);
+
+        // Try to accept connection
+        handle = accept(pSocket->handle, (struct sockaddr *)&address, &address_len);
+
+        if(handle < 0){
+            return -1; // TODO: Return errno value
+        }
+
+        pClientAddress->data.v4 = ntohl(address.sin_addr.s_addr);
+        pClientAddress->port = ntohs(address.sin_port);
+
+    // IPv6
+    } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
+        struct sockaddr_in6 address;
+        memset(&address, 0, sizeof(address));
+        address_len = sizeof(address);
+
+        // Try to accept connection
+        handle = accept(pSocket->handle, (struct sockaddr *)&address, sizeof(struct sockaddr_in6));
+
+        if(handle < 0){
+            return -1; // TODO: Return errno value
+        }
+
+        // Return sender IP & port as argument.
+        memcpy(pClientAddress->data.v6, address.sin6_addr.s6_addr, 16);
+        pClientAddress->scopeId = address.sin6_scope_id;
+        pClientAddress->port = ntohs(address.sin6_port);
+    }
+
+    pAcceptSocket->handle   = handle;
+    pAcceptSocket->protocol = pSocket->protocol;
+
+    return 0;
+}
+
+int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
+{
+    s32 result;
 
     // IPv4
     if (pSocket->protocol == CBLRNET_LAYER_IPv4)
@@ -286,9 +391,8 @@ int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, co
         address.sin_addr.s_addr = htonl(pAddress->data.v4);
         address.sin_port = htons(pAddress->port);
 
-        // Send the data.
-        sent = sendto(pSocket->handle, (const char *)data, size, 0, (struct sockaddr *)&address,
-                      sizeof(struct sockaddr_in));
+        // Try to connect
+        result = connect(pSocket->handle, (struct sockaddr *)&address, sizeof(struct sockaddr_in));
 
     // IPv6
     } else if (pSocket->protocol == CBLRNET_LAYER_IPv6) {
@@ -300,16 +404,9 @@ int cblrnet_socket_send(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, co
         address.sin6_port = htons(pAddress->port);
         address.sin6_scope_id = pAddress->scopeId;
 
-        // Send the data.
-        sent = sendto(pSocket->handle, (const char *)data, size, 0, (struct sockaddr *)&address,
-                      sizeof(struct sockaddr_in6));
+        // Try to connect
+        result = connect(pSocket->handle, (struct sockaddr *)&address, sizeof(struct sockaddr_in6));
     }
 
-    return sent > 0; // TODO: Maybe add more extensive check.
-}
-
-int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
-{
-
-    return 0;
+    return result == 0; // TODO: You may check errno
 }

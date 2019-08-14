@@ -51,7 +51,7 @@ int main()
         while (1)
         {
 
-            int receivedBytes = cblrnet_socket_read(&sock, &senderAddr, &recvBuffer[0], BUFFER_SIZE);
+            int receivedBytes = cblrnet_socket_recvfrom(&sock, &senderAddr, &recvBuffer[0], BUFFER_SIZE);
 
             if (receivedBytes <= 0) {
                 break;
@@ -63,7 +63,7 @@ int main()
             recvBuffer[receivedBytes] = 0x0; // Terminate before printout.
             printf("[%s] '%s'\n", &senderAddrString[0], &recvBuffer[0]);
 
-            cblrnet_socket_send(&sock, &senderAddr, &recvBuffer[0], receivedBytes);
+            cblrnet_socket_sendto(&sock, &senderAddr, &recvBuffer[0], receivedBytes);
         }
     }
 
