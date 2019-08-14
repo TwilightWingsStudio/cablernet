@@ -14,14 +14,15 @@
 
 // Unix
 #else
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <netdb.h>
-#include <unistd.h>
 #include <arpa/inet.h>
 #include <string.h> // mem...
+#include <errno.h>
 #endif
 
 int cblrnet_startup()
@@ -204,7 +205,7 @@ int cblrnet_socket_setoption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t opt
             }
 
             flags = value ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK);
-            return (fcntl(pSocket->handle, F_SETFL, flags) == 0) ? true : false;
+            return (fcntl(pSocket->handle, F_SETFL, flags) == 0) ? 1 : 0;
 #endif
         } break;
 
