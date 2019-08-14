@@ -8,6 +8,16 @@
 #ifdef _WIN32
 #include <WinSock2.h>
 #include <WS2tcpip.h>
+
+// Unix
+#else
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fcntl.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 #endif
 
 int cblrnet_address_fromstring(cblrnetaddress_t *pAddress, const char *pString)
