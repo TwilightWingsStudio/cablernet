@@ -152,7 +152,7 @@ int cblrnet_socket_setoption(cblrnetsocket_t *pSocket, cblrnetsocketoption_t opt
             u32 mode = (u32) value;
             result = ioctlsocket (pSocket->handle, FIONBIO, &mode);
 #else
-            int flags = fcntl(_handle, F_GETFL, 0);
+            int flags = fcntl(pSocket->handle, F_GETFL, 0);
 
             if (flags == -1) {
                 return 0;
