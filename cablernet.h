@@ -142,9 +142,15 @@ CBLRNET_API int cblrnet_socket_accept(cblrnetsocket_t *pSocket, cblrnetaddress_t
 //! Connect to address. Used by stream sockets.
 CBLRNET_API int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress);
 
-// Poll
+//! TODO: description.
 CBLRNET_API int cblrnet_socket_poll(cblrnetsocket_t *pSocket);
 
+//! Get code of last error.
+CBLRNET_API int cblrnet_socket_errno();
+
+//! Get error description by errno
+//! @warning You need to know max size of message string.
+CBLRNET_API int cblrnet_get_err_message(int err, c8 *pBuffer, u8 bufferLength);
 
 #ifdef __cplusplus
 } /* extern "C" */

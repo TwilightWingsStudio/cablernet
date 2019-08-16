@@ -407,6 +407,36 @@ int cblrnet_socket_connect(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress)
         // Try to connect
         result = connect(pSocket->handle, (struct sockaddr *)&address, sizeof(struct sockaddr_in6));
     }
+    return result == 0; // [Tin] You may check errno
+}
 
-    return result == 0; // TODO: You may check errno
+int cblrnet_socket_errno()
+{
+#ifdef _WIN32
+    return WSAGetLastError();
+#else
+    return errno;
+#endif
+}
+
+int cblrnet_get_err_message(int err, c8 *pBuffer, u8 bufferLength)
+{
+    *pBuffer = 0;
+#ifdef _WIN32
+    FormatMessageA (FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                   NULL,
+                   err,
+                   MAKELANGID (LANG_ENGLISH, SUBLANG_ENGLISH_US),
+                   pBuffer,
+                   bufferLength,
+                   NULL);
+#else
+    // [Tin] NOTE: Check this pls.
+    strerror_r(err, pBuffer, bufferLength - 1);
+#endif
+    if (!*pBuffer) {
+       // Provide error if no string available
+       sprintf (pBuffer, "%d\n", err);
+    }
+    return 0;
 }
