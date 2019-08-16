@@ -1,14 +1,58 @@
 #include <stdio.h>
+#include <conio.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include <cablernet.h>
 
 #define EXAMPLE_NAME "tcpechoserver"
 #define BUFFER_SIZE 1472
 #define MAX_CONNECTIONS 1
+#define STR_ADDR "0.0.0.0:25602"    // Using default network interface.
+
+
+cblrnetsocket_t sock, senderSock;
+
+// Clear sockets and network API.
+void on_close() {
+    // Sockets need to be closed anyway.
+    cblrnet_socket_close(&sock);
+    cblrnet_socket_close(&senderSock);
+    cblrnet_shutdown();
+
+    printf("CLOSED\n");
+}
+
+#ifdef _WIN32
+    // Application close handler.
+    // [Tin] NOTE: You can handle it your way.
+    BOOL WINAPI HandlerRoutine(_In_ DWORD dwCtrlType)
+    {
+        if(dwCtrlType == CTRL_CLOSE_EVENT || dwCtrlType == CTRL_C_EVENT){
+            on_close();
+            return 1;
+        }
+    }
+#else
+    void HandlerRoutine(int sig)
+    {
+        on_close();
+    }
+#endif
 
 int main()
 {
-    cblrnetsocket_t sock, senderSock;
+#ifdef _WIN32
+    // Set close handler.
+    SetConsoleCtrlHandler(HandlerRoutine, TRUE);
+#else
+    // [Tin] NOTE: Cheak it pls.
+    signal(SIGINT, HandlerRoutine);
+    signal(SIGBREAK, HandlerRoutine);
+#endif
+
     cblrnetaddress_t addr, senderAddr;
     u8 recvBuffer[BUFFER_SIZE];
 
@@ -19,7 +63,8 @@ int main()
         return 1;
     }
 
-    cblrnet_address_fromstring(&addr, "127.0.0.1:25600"); // Use default network interface.
+    cblrnet_address_fromstring(&addr, STR_ADDR);
+    printf("Server address: %s\n", STR_ADDR);
 
     // Open TCP socket.
     if (cblrnet_socket_open(&sock, CBLRNET_LAYER_IPv4, CBLRNET_SOCKET_TYPE_STREAM) != 0) {
@@ -38,7 +83,11 @@ int main()
         return 1;
     }
 
-    printf("Listening port: %d\n", addr.port);
+    c8 addrString[22];
+    memset(&addrString[0], 0, 22);
+    cblrnet_address_tostring(&addr, &addrString[0], 16);
+
+    printf("Listening: %s\n", addrString);
 
     memset(&recvBuffer[0], 0, BUFFER_SIZE);
 
@@ -80,6 +129,9 @@ int main()
             break;
         }
     }
+
+    // Close socket and clear API.
+    on_close();
 
     return 0;
 }
