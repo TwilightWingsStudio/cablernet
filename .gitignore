@@ -1,6 +1,6 @@
-*.obj
 *.so
 *.dll
+*.exe
 *.lib
 *.a
 *.exp
@@ -8,6 +8,14 @@
 # QtCreator
 *.pro.user
 *.pro.user.*
+
+# Visual Studio
+*.obj
+*.sdf
+*.vcxproj.user
+*.log
+*.tlog
+*.pdb
 
 # SCons
 *.dblite
