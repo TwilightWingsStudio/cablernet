@@ -98,6 +98,9 @@ CBLRNET_API int cblrnet_address_tostring(cblrnetaddress_t *pAddress, c8 *pBuffer
 //!
 CBLRNET_API int cblrnet_address_resolve(cblrnetaddress_t *pAddress, const c8 *pName);
 
+//!
+CBLRNET_API int cblrnet_address_compare(cblrnetaddress_t *pFirst, cblrnetaddress_t *pSecond);
+
 
 //! Prepare sockets for usage. Call it once per your program.
 //! Returns 0 if everything fine. Error index othervise.

@@ -259,3 +259,23 @@ int cblrnet_address_resolve(cblrnetaddress_t *pAddress, const c8 *pName)
     freeaddrinfo(resolved);
     return 0;
 }
+
+int cblrnet_address_compare(cblrnetaddress_t *pFirst, cblrnetaddress_t *pSecond)
+{
+  if (pFirst->protocol != pSecond->protocol) {
+    return 0;
+  }
+
+  if (pFirst->port != pSecond->port) {
+    return 0;
+  }
+  
+  if (pFirst->protocol == CBLRNET_LAYER_IPv4) {
+    return pFirst->data.v4 == pSecond->data.v4;
+
+  } else if (pFirst->protocol == CBLRNET_LAYER_IPv6) {
+    return !memcmp(&pFirst->data.v6[0], &pSecond->data.v6[0], 16);
+  }
+  
+  return 1;
+}
