@@ -40,7 +40,7 @@ typedef enum cblrnetlayerprotocol_e
 }
 cblrnetlayerprotocol_t;
 
-typedef enum socxxnetsocketoption_e
+typedef enum cblrnetsocketoption_e
 {
     //! Switch socket between blocking and non-blocking modes.
     CBLRNET_SOCKOPT_NONBLOCKING = 1,
@@ -59,7 +59,7 @@ typedef enum socxxnetsocketoption_e
 }
 cblrnetsocketoption_t;
 
-typedef struct socxxnetaddress_s
+typedef struct cblrnetaddress_s
 {
     u16 port;
     u32 scopeId;
@@ -74,14 +74,14 @@ typedef struct socxxnetaddress_s
 cblrnetaddress_t;
 
 //! This enum specifies socket type.
-typedef enum socxxnetsocketstype_e
+typedef enum cblrnetsocketstype_e
 {
     CBLRNET_SOCKET_TYPE_DGRAM = 1,
     CBLRNET_SOCKET_TYPE_STREAM
 }
 cblrnetsockettype_t;
 
-typedef struct socxxnetsocket_s
+typedef struct cblrnetsocket_s
 {
     int handle;
     cblrnetlayerprotocol_t protocol;
