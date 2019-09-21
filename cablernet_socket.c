@@ -288,7 +288,7 @@ int cblrnet_socket_sendto(cblrnetsocket_t *pSocket, cblrnetaddress_t *pAddress, 
 
     if(pAddress == NULL) {
         // SOCK_STREAM
-        sent = sendto(pSocket->handle, (const char *)data, size, 0, NULL, NULL);
+        sent = sendto(pSocket->handle, (const char *)data, size, 0, NULL, 0);
 
     } else {
         // IPv4
@@ -359,7 +359,7 @@ int cblrnet_socket_accept(cblrnetsocket_t *pSocket, cblrnetaddress_t *pClientAdd
         address_len = sizeof(address);
 
         // Try to accept connection
-        handle = accept(pSocket->handle, (struct sockaddr *)&address, sizeof(struct sockaddr_in6));
+        handle = accept(pSocket->handle, (struct sockaddr *)&address, &address_len);
 
         if(handle < 0){
             return -1; // TODO: Return errno value
