@@ -6,6 +6,7 @@
 #define EXAMPLE_NAME "chatclient"
 #define RECV_BUFFER_SIZE 1472
 #define INPUT_BUFFER_SIZE 160
+#define STR_DEST_ADDR "127.0.0.1:25600"
 
 int main()
 {
@@ -29,7 +30,7 @@ int main()
         return 1;
     }
 
-    cblrnet_address_fromstring(&destAddr, "0.0.0.0:25600");
+    cblrnet_address_fromstring(&destAddr, STR_DEST_ADDR);
 
     // The main loop.
     while (1)
