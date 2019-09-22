@@ -15,10 +15,15 @@
 *.opendb
 *.obj
 *.sdf
+*.opensdf
 *.vcxproj.user
 *.log
 *.tlog
 *.pdb
+*.suo
+
+Release_*/
+Debug_*/
 
 # SCons
 *.dblite
