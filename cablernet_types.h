@@ -1,7 +1,7 @@
-// Copyright (C) 2018 ZCaliptium.
+// Copyright (C) 2018-2019 ZCaliptium.
 
-#ifndef ZKTTYPES_H
-#define ZKTTYPES_H
+#ifndef CBLRNET_TYPES_H
+#define CBLRNET_TYPES_H
 
 //! 8 bit unsigned integer variable.
 typedef unsigned char u8;

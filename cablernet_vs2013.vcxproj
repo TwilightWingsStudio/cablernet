@@ -126,7 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cablernet.h" />
-    <ClInclude Include="zkttypes.h" />
+    <ClInclude Include="cablernet_types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cablernet_address.c" />

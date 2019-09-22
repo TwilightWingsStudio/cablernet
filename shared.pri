@@ -4,4 +4,4 @@ SOURCES += \
 
 HEADERS += \
     $$PWD/cablernet.h \
-    $$PWD/zkttypes.h
+    $$PWD/cablernet_types.h

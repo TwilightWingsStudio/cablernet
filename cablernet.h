@@ -3,7 +3,7 @@
 #ifndef CBLRNET_H
 #define CBLRNET_H
 
-#include "zkttypes.h"
+#include "cablernet_types.h"
 
 #if defined(CBLRNET_DYNAMIC_LIB)
     #if defined(_WIN32)
