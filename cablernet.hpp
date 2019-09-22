@@ -106,7 +106,7 @@ inline int poll(cblrnetsocket_t &socket)
   return cblrnet_socket_poll(&socket);
 }
   
-inline int errno()
+inline int get_errno()
 {
   return cblrnet_socket_errno();
 }
