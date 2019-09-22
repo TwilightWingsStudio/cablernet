@@ -11,6 +11,7 @@
 #define close closesocket
 
 #include <cerrno>
+#include <stdio.h>
 
 // Unix
 #else
