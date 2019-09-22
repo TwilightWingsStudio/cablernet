@@ -8,14 +8,29 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{964F0E13-74EC-4C73-BC9F-D7B2E04A594E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "broadcastsender", "examples\broadcastsender\broadcastsender_vs2015.vcxproj", "{A15E3579-6127-4860-A9FA-D386F51A7A27}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A591FB01-F052-41EA-9C12-17FA7EE2C0E7} = {A591FB01-F052-41EA-9C12-17FA7EE2C0E7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chatclient", "examples\chatclient\chatclient_vs2015.vcxproj", "{1C27956F-5BAF-4BCE-AA95-C37478D61E10}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A591FB01-F052-41EA-9C12-17FA7EE2C0E7} = {A591FB01-F052-41EA-9C12-17FA7EE2C0E7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echoserver", "examples\echoserver\echoserver_vs2015.vcxproj", "{A09F6F4F-C9D0-4BFA-8806-1F28593CC246}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A591FB01-F052-41EA-9C12-17FA7EE2C0E7} = {A591FB01-F052-41EA-9C12-17FA7EE2C0E7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcpclient", "examples\tcpclient\tcpclient_vs2015.vcxproj", "{B5590C9E-1331-4931-92D3-89DD8E548C25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A591FB01-F052-41EA-9C12-17FA7EE2C0E7} = {A591FB01-F052-41EA-9C12-17FA7EE2C0E7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcpechoserver", "examples\tcpechoserver\tcpechoserver_vs2015.vcxproj", "{EB593AF8-A925-48A3-80D1-E2212E5C8B36}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A591FB01-F052-41EA-9C12-17FA7EE2C0E7} = {A591FB01-F052-41EA-9C12-17FA7EE2C0E7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

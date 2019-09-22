@@ -8,14 +8,29 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{BD651F4D-46E9-4637-8EAC-0C5F7FFB8197}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "broadcastsender", "examples\broadcastsender\broadcastsender_vs2013.vcxproj", "{D36FCBC3-F27A-44F0-AB3A-0FCEDE2B103E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6014B89-587A-4823-BD37-793F9A282230} = {E6014B89-587A-4823-BD37-793F9A282230}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chatclient", "examples\chatclient\chatclient_vs2013.vcxproj", "{A48BFBED-8E9E-46AF-886C-196C36F8AFF0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6014B89-587A-4823-BD37-793F9A282230} = {E6014B89-587A-4823-BD37-793F9A282230}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echoserver", "examples\echoserver\echoserver_vs2013.vcxproj", "{393A37C5-32BF-41F8-82DA-84F1FC244455}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6014B89-587A-4823-BD37-793F9A282230} = {E6014B89-587A-4823-BD37-793F9A282230}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcpclient", "examples\tcpclient\tcpclient_vs2013.vcxproj", "{21C0DC19-D6B1-4476-9075-E8D1AC3927B2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6014B89-587A-4823-BD37-793F9A282230} = {E6014B89-587A-4823-BD37-793F9A282230}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcpechoserver", "examples\tcpechoserver\tcpechoserver_vs2013.vcxproj", "{BC02593D-27A6-482E-B72B-AFD33FEF937A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6014B89-587A-4823-BD37-793F9A282230} = {E6014B89-587A-4823-BD37-793F9A282230}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
